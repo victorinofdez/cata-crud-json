@@ -9,6 +9,11 @@
             "id": 1,
             "name": "Resident evil 4",
             "year": "2004"
+        },
+        "3": {
+            "id": 3,
+            "name": "Mario",
+            "year": 1985
         }
     }
 }

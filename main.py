@@ -2,69 +2,71 @@ import json
 
 DATA_FILE = "persistencia/data.json"
 
-def read_file():
-    with open(DATA_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+def read_file(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
-def write_file(data):
-    with open(DATA_FILE, "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=4)
+def write_file(path, data):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
-def create(game_id, name, year):
-    data = read_file()
 
-    if str(game_id) in data["games"]:
-        print("El juego ya existe")
+def create(path, section, key, value):
+    data = read_file(path)
+
+    if section not in data:
+        data[section] = {}
+
+    if str(key) in data[section]:
+        print("Ya existe")
         return
 
-    data["games"][str(game_id)] = {
-        "id": game_id,
-        "name": name,
-        "year": year
-    }
+    data[section][str(key)] = value
+    write_file(path, data)
 
-    write_file(data)
-    print("Juego creado")
 
-def get(game_id):
-    data = read_file()
-    return data["games"].get(str(game_id), "Juego no encontrado")
+def get(path, section, key):
+    data = read_file(path)
+    return data.get(section, {}).get(str(key), None)
 
-def update(game_id, name=None, year=None):
-    data = read_file()
-    game = data["games"].get(str(game_id))
 
-    if not game:
-        print("Juego no encontrado")
+def update(path, section, key, value):
+    data = read_file(path)
+
+    if str(key) not in data.get(section, {}):
+        print("No existe")
         return
 
-    if name:
-        game["name"] = name
-    if year:
-        game["year"] = year
+    data[section][str(key)] = value
+    write_file(path, data)
 
-    write_file(data)
-    print("Juego actualizado")
 
-def delete(game_id):
-    data = read_file()
+def delete(path, section, key):
+    data = read_file(path)
 
-    if str(game_id) not in data["games"]:
-        print("Juego no encontrado")
+    if str(key) not in data.get(section, {}):
+        print("No existe")
         return
 
-    del data["games"][str(game_id)]
-    write_file(data)
-    print("Juego eliminado")
+    del data[section][str(key)]
+    write_file(path, data)
 
-def get_all_games():
-    data = read_file()
-    return data["games"]
+
+def get_all(path, section):
+    data = read_file(path)
+    return data.get(section, {})
 
 
 def main():
-    hola = get(1)
-    print(hola)
+    hola = get(DATA_FILE, "games", 1)
+    create(
+        DATA_FILE,
+        "games",
+        3,
+        {"id": 3, "name": "Mario", "year": 1985}
+    )
+    mario = get(DATA_FILE, "games", 3)
+    print(mario)
 if __name__ == "__main__":
     main()
