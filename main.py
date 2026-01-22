@@ -1,6 +1,6 @@
 import json
 
-DATA_FILE = "../data/data.json"
+DATA_FILE = "persistencia/data.json"
 
 def read_file():
     with open(DATA_FILE, "r", encoding="utf-8") as file:
@@ -64,18 +64,7 @@ def get_all_games():
 
 
 def main():
-    create(1, "Resident evil 4", "2004")
-
-    re4 = get(1)
-    print(re4)
-
-    create(2, "Metal Gear Solid 3", "2004")
-    mgs3 = get(2)
-    print(mgs3)
-
-    #delete(1)
-    mgs3 = get(1)
-    print(mgs3)
-
+    hola = get(1)
+    print(hola)
 if __name__ == "__main__":
     main()
